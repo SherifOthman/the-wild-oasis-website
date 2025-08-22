@@ -14,6 +14,9 @@ Integrated with the admin dashboard for real-time reservation management.
 - **Backend:** Supabase
 - **Deployment:** Vercel
 
+### 📝 Note  
+This project is part of the **React Course by Jonas Schmedtmann**.
+
 ## 🔗 Live Demo
 [View Website](https://the-wild-oasis-website-tau-cyan.vercel.app/)
 
