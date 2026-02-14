@@ -1,129 +1,163 @@
-# 🏨 The Wild Oasis - Customer Booking Website
+# The Wild Oasis - Customer Booking Website
 
-> **Next.js Customer Website** for luxury cabin bookings with Google authentication and real-time availability
+A Next.js customer-facing website for cabin bookings, built to learn Next.js App Router, Server Components, and OAuth authentication.
 
+**Live Demo**: https://the-wild-oasis-website-tau-cyan.vercel.app
 
-## 🔗 **Live Demo**
+## Purpose
 
-- **🌐 Live Website**: [https://the-wild-oasis-website-tau-cyan.vercel.app](https://the-wild-oasis-website-tau-cyan.vercel.app)
-- **📱 Responsive Design**: Optimized for mobile, tablet, and desktop
-- **🔐 Google Login**: OAuth authentication required for bookings
+This project demonstrates how to build a customer booking system where users can browse cabins, check availability, make reservations, and manage their bookings. It focuses on Next.js 14 features like Server Components, Server Actions, and modern authentication patterns.
 
-## 🎯 **What This Project Is**
+## Architecture
 
-A customer-facing website for "The Wild Oasis" luxury cabin hotel. Guests can browse cabins, check availability, make reservations, and manage their bookings with Google authentication integration.
-
-## 🛠️ **Technology Stack**
-
-| Technology | Purpose |
-|-----------|---------|
-| **Next.js 14** | React framework with App Router |
-| **React 18** | Frontend library with server components |
-| **Tailwind CSS** | Utility-first styling framework |
-| **Supabase** | Backend database and storage |
-| **NextAuth v5** | Authentication with Google OAuth |
-| **React Day Picker** | Interactive date selection |
-| **date-fns** | Date manipulation utilities |
-
-## ✅ **Key Features Implemented**
-
-### **Cabin Browsing & Booking**
-- ✅ **Cabin Gallery** - Browse all available luxury cabins with detailed information
-- ✅ **Capacity Filtering** - Filter by guest capacity (small 1-3, medium 4-7, large 8-12)
-- ✅ **Interactive Date Picker** - Visual calendar with real-time availability checking
-- ✅ **Dynamic Pricing** - Automatic price calculation based on dates and discounts
-- ✅ **Booking Constraints** - Respects min/max booking length settings
-
-### **Authentication & User Management**
-- ✅ **Google OAuth** - Secure login with Google accounts
-- ✅ **Automatic Guest Creation** - Creates guest profile on first login
-- ✅ **Profile Management** - Update nationality and national ID with validation
-- ✅ **Session Management** - Persistent login with guest ID tracking
-
-### **Reservation Management**
-- ✅ **View Reservations** - Complete list of user's bookings (past and upcoming)
-- ✅ **Edit Bookings** - Modify guest count and observations for upcoming reservations
-- ✅ **Delete Reservations** - Cancel bookings with authorization checks
-- ✅ **Booking Details** - Dates, duration, guest count, total price, creation date
-- ✅ **Optimistic Updates** - Instant UI feedback during operations
-
-### **User Experience**
-- ✅ **Responsive Design** - Mobile-first approach with Tailwind CSS
-- ✅ **Server Components** - Default for data fetching and SEO optimization
-- ✅ **Loading States** - Spinners and skeleton screens
-- ✅ **Error Handling** - Graceful error messages and fallbacks
-
-### **Content & Pages**
-- ✅ **Home Page** - Hero section with call-to-action
-- ✅ **About Page** - Hotel information and description
-- ✅ **Account Dashboard** - User account overview and management
-- ✅ **Booking Confirmation** - Thank you page after successful booking
-
-## 🏗️ **Architecture**
-
-**Next.js App Router Structure:**
-- **app/_components/** - Reusable React components
-- **app/_lib/** - Business logic, authentication, and data services
-- **app/cabins/** - Cabin browsing and booking pages
-- **app/account/** - User account management pages
-
-**Key Patterns:**
-- **Server Components** - Default for data fetching and SEO
-- **Client Components** - Interactive features with "use client"
-- **Server Actions** - Form handling and mutations
-- **Optimistic Updates** - Instant UI feedback
-
-## 💾 **Database**
-
-**Supabase (PostgreSQL):**
-- **cabins** - Cabin information with images and pricing
-- **guests** - Guest profiles linked to Google OAuth accounts
-- **bookings** - Reservations with guest and cabin relationships
-- **settings** - Hotel configuration (min/max booking length)
-
-## 🔄 **Key Workflows**
-
-**Booking Process:**
-1. User selects cabin → views details page
-2. Chooses dates → system checks availability
-3. Calculates price → (regularPrice - discount) × nights
-4. Fills booking form → submits with guest info
-5. Server action creates booking → redirects to confirmation
-
-**Authentication Flow:**
-1. User clicks login → redirected to Google OAuth
-2. Google returns user data → NextAuth processes
-3. System creates guest if new → session enriched with guest ID
-
-## 🚀 **Quick Start**
-
-**Prerequisites:** Node.js 18+, Supabase account, Google OAuth credentials
-
-**Environment Variables:**
-```bash
-SUPABASE_URL=your_supabase_url
-SUPABASE_KEY=your_supabase_key
-AUTH_GOOGLE_ID=your_google_client_id
-AUTH_GOOGLE_SECRET=your_google_client_secret
+**Next.js App Router Structure**:
+```
+app/
+├── _components/       # Reusable React components
+├── _lib/              # Business logic and data services
+├── cabins/            # Cabin browsing and booking
+├── account/           # User account management
+└── api/               # API routes for auth
 ```
 
-**Setup:**
-```bash
-npm install
-# Create .env.local with environment variables
-npm run dev
-# Access: http://localhost:3000
+**Key Design Decisions**:
+- Server Components by default for better performance
+- Client Components only when interactivity is needed
+- Server Actions for form submissions and mutations
+- NextAuth v5 for Google OAuth integration
+
+## Technical Skills Demonstrated
+
+**Next.js App Router**:
+- Server Components for data fetching without client-side JavaScript
+- Client Components marked with `"use client"` for interactivity
+- Server Actions for form handling and mutations
+- Middleware for authentication checks
+
+**Server vs Client Components**:
+- Server: Data fetching, static content, SEO-friendly pages
+- Client: Interactive forms, date pickers, buttons with state
+- Understanding when to use each improves performance
+
+**Authentication Flow**:
+- Google OAuth with NextAuth v5
+- Session management with JWT tokens
+- Automatic guest profile creation on first login
+- Protected routes that require authentication
+
+**Data Fetching**:
+- Server-side data fetching in Server Components
+- No loading spinners for initial page load (SSR)
+- Supabase client for database queries
+- Date-based availability checking
+
+**Form Handling**:
+- Server Actions for form submissions
+- Optimistic UI updates for instant feedback
+- Form validation and error handling
+- File uploads (national ID, profile images)
+
+## Implementation Details
+
+**Server Component Example**:
+```javascript
+// Fetches data on the server, no client-side JavaScript
+async function CabinList() {
+  const cabins = await getCabins(); // Direct database call
+  return <div>{cabins.map(cabin => <CabinCard cabin={cabin} />)}</div>;
+}
 ```
 
-## 📊 **Project Stats**
+**Server Action Example**:
+```javascript
+// Form submission handled on the server
+async function createBooking(formData) {
+  'use server';
+  const booking = await insertBooking(formData);
+  revalidatePath('/account/reservations');
+  redirect('/cabins/thankyou');
+}
+```
 
-- **8 Pages** - Complete booking website functionality
-- **20+ Components** - Reusable React components
-- **6 Server Actions** - Secure mutation functions
-- **4 Database Tables** - Normalized schema
-- **Google OAuth** - NextAuth v5 integration
-- **Mobile-First** - Responsive Tailwind CSS design
+**Authentication Flow**:
+1. User clicks "Sign in with Google"
+2. NextAuth redirects to Google OAuth
+3. Google returns user data
+4. System creates guest profile if new user
+5. Session enriched with guest ID for bookings
+
+**Booking Process**:
+1. Browse cabins with filtering by capacity
+2. Select cabin and view details
+3. Choose dates with interactive calendar
+4. System checks availability against existing bookings
+5. Calculate price: (regularPrice - discount) × nights
+6. Submit booking form with guest count and observations
+7. Server Action creates booking in database
+8. Redirect to confirmation page
+
+**Optimistic Updates**:
+- Delete booking: UI updates immediately, rollback on error
+- Edit booking: Shows changes before server confirms
+- Improves perceived performance
+
+## Technology Stack
+
+- Next.js 14 with App Router
+- React 18 with Server Components
+- NextAuth v5 for Google OAuth
+- Supabase for database and storage
+- Tailwind CSS for styling
+- React Day Picker for date selection
+- date-fns for date manipulation
+
+## What I Learned
+
+**Server Components Benefits**:
+- Zero JavaScript shipped for static content
+- Data fetching happens on the server (faster, more secure)
+- SEO-friendly with fully rendered HTML
+- Reduces client-side bundle size significantly
+
+**Server Actions**:
+- Simplify form handling without API routes
+- Type-safe with TypeScript
+- Automatic revalidation of cached data
+- Can be called from Client Components
+
+**Next.js App Router**:
+- File-based routing with conventions (page.js, layout.js, loading.js)
+- Nested layouts share UI across routes
+- Loading and error states handled declaratively
+- Parallel routes and intercepting routes for advanced patterns
+
+**OAuth Integration**:
+- NextAuth v5 simplifies OAuth significantly
+- Session management handled automatically
+- Callbacks allow custom logic (create guest profile)
+- Middleware protects routes without manual checks
+
+**Real-World Challenges**:
+- Server vs Client Components requires careful planning
+- Date handling across timezones is complex
+- Availability checking needs careful database queries
+- Optimistic updates require rollback logic
+
+**Performance Considerations**:
+- Server Components reduce JavaScript bundle
+- Static generation for pages that don't change
+- Image optimization with next/image
+- Lazy loading for client-side components
+
+## Project Stats
+
+- 8 pages with full booking functionality
+- 20+ components (mix of Server and Client)
+- 6 Server Actions for mutations
+- 4 database tables (cabins, guests, bookings, settings)
+- Google OAuth integration
+- Mobile-responsive design
 
 ---
 
-**Part of:** React Course by Jonas Schmedtmann - Customer-facing hotel booking website
+**Learning Focus**: Next.js App Router, Server Components, Server Actions, and OAuth authentication with NextAuth
